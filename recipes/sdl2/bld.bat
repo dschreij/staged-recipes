@@ -4,7 +4,8 @@
 setlocal EnableDelayedExpansion
 
 if "%PY_VER%"=="2.7" (
-	set VC9DIR=%LOCALAPPDATA%\Programs\Common\Microsoft\Visual C++ for Python\9.0
+	set VC9DIR="%LOCALAPPDATA%\Programs\Common\Microsoft\Visual C++ for Python\9.0"
+	set DXSDK_DIR="%programfiles(x86)%\Microsoft SDKs\Windows\v7.1A"
 	IF EXIST !VC9DIR! ( 
 		:: set PATH=!VC9DIR!;"%PATH%"
 		if %ARCH% == 32 set VC_ARCH=x86
@@ -21,7 +22,9 @@ cd %SRC_DIR%
 mkdir build
 cd build
 
-call %LIBRARY_BIN%\cmake .. -G "NMake Makefiles" -D DESTINATION:FILEPATH="%LIBRARY_PREFIX%"
+echo "DIRECTX at %DXSDK_DIR%, Yo!"
+
+call %LIBRARY_BIN%\cmake -G "NMake Makefiles" -DCMAKE_INSTALL_PREFIX:PATH="%LIBRARY_PREFIX%" -DCMAKE_BUILD_TYPE:STRING=Release .. 
 if errorlevel 1 exit 1
 
 nmake

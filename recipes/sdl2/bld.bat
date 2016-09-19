@@ -3,6 +3,12 @@
 setlocal EnableDelayedExpansion
 
 set TARGET=Release
+:: Set target back to Debug for 64-bits builds with VS2008 and VS2010
+if %VS_MAJOR% LSS 14 (
+	if %ARCH% == 64 (
+		set TARGET=Debug
+	)
+)
 
 :: When installing Visual C++ compiler tools for Python 2.7, all files are placed in the users AppData folder
 :: conda-bld tries to call vcvarsall at its classic location, which of course fails, so we have to call it from its
@@ -16,7 +22,6 @@ if "%PY_VER%"=="2.7" (
 		call !VC9DIR!\vcvarsall.bat !VC_ARCH!
 	)
 	set DIRECTX_FLAG="-DDIRECTX=OFF "
-	if %ARCH% == 64 set TARGET=Debug
 )
 if errorlevel 1 exit 1
 

@@ -21,7 +21,7 @@ if "%PY_VER%"=="2.7" (
 		if %ARCH% == 64 set VC_ARCH=amd64
 		call !VC9DIR!\vcvarsall.bat !VC_ARCH!
 	)
-	set DIRECTX_FLAG="-DDIRECTX=OFF "
+	set DIRECTX_FLAG="-DDIRECTX=OFF"
 )
 if errorlevel 1 exit 1
 

@@ -1,19 +1,22 @@
-@echo off
 :: MSVC library for Python 2.7 is not found automaticaly if it is 
 :: installed in the user's AppData folder. Add it to PATH
 setlocal EnableDelayedExpansion
 
+set TARGET=Release
+
+:: When installing Visual C++ compiler tools for Python 2.7, all files are placed in the users AppData folder
+:: conda-bld tries to call vcvarsall at its classic location, which of course fails, so we have to call it from its
+:: new location in the the users appdata folder manually, but only if this folder exists of course.
 if "%PY_VER%"=="2.7" (
 	set VC9DIR="%LOCALAPPDATA%\Programs\Common\Microsoft\Visual C++ for Python\9.0"
-	set DXSDK_DIR="%programfiles(x86)%\Microsoft SDKs\Windows\v7.1A"
+	:: set DXSDK_DIR="%programfiles(x86)%\Microsoft SDKs\Windows\v7.1A" :: Doesn't really work, only finds directx partially
 	IF EXIST !VC9DIR! ( 
-		:: set PATH=!VC9DIR!;"%PATH%"
 		if %ARCH% == 32 set VC_ARCH=x86
 		if %ARCH% == 64 set VC_ARCH=amd64
 		call !VC9DIR!\vcvarsall.bat !VC_ARCH!
-		:: vcvarsall does something strange with PATH, preventing xcopy to be found later. Fix this
-		:: set PATH=!PATH!;%SYSTEMROOT%\system32
 	)
+	set DIRECTX_FLAG="-DDIRECTX=OFF "
+	if %ARCH% == 64 set TARGET=Debug
 )
 if errorlevel 1 exit 1
 
@@ -22,9 +25,7 @@ cd %SRC_DIR%
 mkdir build
 cd build
 
-echo "DIRECTX at %DXSDK_DIR%, Yo!"
-
-call %LIBRARY_BIN%\cmake -G "NMake Makefiles" -DCMAKE_INSTALL_PREFIX:PATH="%LIBRARY_PREFIX%" -DCMAKE_BUILD_TYPE:STRING=Release .. 
+call %LIBRARY_BIN%\cmake -G "NMake Makefiles" -DCMAKE_INSTALL_PREFIX:PATH="%LIBRARY_PREFIX%" -DCMAKE_BUILD_TYPE:STRING=!TARGET! !DIRECTX_FLAG! .. 
 if errorlevel 1 exit 1
 
 nmake

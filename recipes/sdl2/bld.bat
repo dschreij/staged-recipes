@@ -6,7 +6,7 @@ set TARGET=Release
 :: Set target back to Debug for 64-bits builds with VS2008 and VS2010
 if %VS_MAJOR% LSS 14 (
 	if %ARCH% == 64 (
-		set TARGET=Debug
+		set TARGET=None
 	)
 )
 

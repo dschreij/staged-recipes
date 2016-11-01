@@ -29,6 +29,8 @@ requirements:
     - autoconf  # [unix]
 
 test:
+  requires:
+    - python {{ environ['PY_VER'] + '*' }}  # [win]
   commands:
     - sdl2-config --version  # [unix]
 

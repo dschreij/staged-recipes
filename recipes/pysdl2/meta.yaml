@@ -21,7 +21,7 @@ requirements:
   build:
     - patch  # [win]
     - sdl2
-    - python {{ environ['PY_VER'] + '*' }}
+    - python
     - setuptools
 
   run:
